@@ -24,6 +24,12 @@ app.get('/', (req, res) => {
 // In-memory database (JSON file)
 const DB_FILE = 'data.json';
 
+// Wallet configuration
+const WALLETS = {
+  ethereum: '0xeDABd062f7B9585f7Ef3a9681985f28DF8e2319D',
+  bitcoin: 'bc1qyzk3fvn75mtaw7t9w46sdlsnly3hm7wa5sap07'
+};
+
 function getDB() {
   try {
     return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
@@ -32,18 +38,12 @@ function getDB() {
       agents: [],
       orders: [],
       transactions: [],
-      fees: {
-        BTC: 0.1,
-        ETH: 0.1,
-        USDT: 0.1,
-        USDC: 0.1,
-        DOGE: 0.1,
-        SOL: 0.1,
-        XRP: 0.1,
-        LINK: 0.1,
-        ADA: 0.1,
-        AVAX: 0.1
-      }
+      fees_collected: {
+        ethereum: 0,
+        bitcoin: 0,
+        total: 0
+      },
+      wallet_config: WALLETS
     };
   }
 }
@@ -128,7 +128,7 @@ app.get('/api/orders/open/:pair', (req, res) => {
   res.json(orders);
 });
 
-// Execute Trade
+// Execute Trade (with dual-wallet fee tracking)
 app.post('/api/trades/execute', (req, res) => {
   const { seller_id, buyer_id, pair, amount, price, crypto_type } = req.body;
   if (!seller_id || !buyer_id || !pair || !amount || !price) {
@@ -137,6 +137,10 @@ app.post('/api/trades/execute', (req, res) => {
 
   const db = getDB();
   const fee = amount * 0.001; // 0.1% fee
+  
+  // Split fee 50/50 between ETH and BTC wallets
+  const ethFee = fee / 2;
+  const btcFee = fee / 2;
 
   const transaction = {
     id: db.transactions.length + 1,
@@ -146,20 +150,37 @@ app.post('/api/trades/execute', (req, res) => {
     amount,
     price,
     fee,
+    fee_split: {
+      ethereum: ethFee,
+      bitcoin: btcFee
+    },
     fee_type: crypto_type,
     status: 'completed',
     created_at: new Date().toISOString()
   };
 
   db.transactions.push(transaction);
+  
+  // Update fees collected
+  if (!db.fees_collected) {
+    db.fees_collected = { ethereum: 0, bitcoin: 0, total: 0 };
+  }
+  db.fees_collected.ethereum += ethFee;
+  db.fees_collected.bitcoin += btcFee;
+  db.fees_collected.total += fee;
+  
   saveDB(db);
   res.json({
     transaction_id: transaction.id,
     amount,
     fee,
+    fee_split: {
+      ethereum: { amount: ethFee, wallet: WALLETS.ethereum },
+      bitcoin: { amount: btcFee, wallet: WALLETS.bitcoin }
+    },
     fee_type: crypto_type,
     total: amount + fee,
-    message: 'Trade executed'
+    message: 'Trade executed - fees split to dual wallets'
   });
 });
 
@@ -172,14 +193,39 @@ app.get('/api/transactions/:agent_id', (req, res) => {
   res.json(txs);
 });
 
-// Get Fees
+// Get Fees Collected & Wallet Config
 app.get('/api/fees', (req, res) => {
   const db = getDB();
-  const fees = Object.keys(db.fees).map(crypto => ({
-    crypto_type: crypto,
-    fee_percentage: db.fees[crypto]
-  }));
-  res.json(fees);
+  res.json({
+    fees_collected: db.fees_collected || { ethereum: 0, bitcoin: 0, total: 0 },
+    wallets: WALLETS,
+    fee_rate: 0.001, // 0.1%
+    distribution: {
+      ethereum: '50%',
+      bitcoin: '50%'
+    }
+  });
+});
+
+// Get Earnings Dashboard
+app.get('/api/dashboard/earnings', (req, res) => {
+  const db = getDB();
+  const feesCollected = db.fees_collected || { ethereum: 0, bitcoin: 0, total: 0 };
+  res.json({
+    total_fees: feesCollected.total,
+    ethereum: {
+      amount: feesCollected.ethereum,
+      wallet: WALLETS.ethereum,
+      percentage: 50
+    },
+    bitcoin: {
+      amount: feesCollected.bitcoin,
+      wallet: WALLETS.bitcoin,
+      percentage: 50
+    },
+    wallet_config: WALLETS,
+    last_updated: new Date().toISOString()
+  });
 });
 
 // Swap endpoint (frontend usage)
