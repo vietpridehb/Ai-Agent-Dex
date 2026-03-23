@@ -10,6 +10,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// Default route to swap.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'swap.html'));
+});
+
 // In-memory database (JSON file)
 const DB_FILE = 'data.json';
 
