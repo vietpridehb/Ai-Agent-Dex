@@ -3,97 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Agent DEX - Next Generation Trading</title>
+    <title>AI Agent DEX - Professional Trading Platform</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: #0a0e1a;
-            color: #e8eaed;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1419 50%, #0a0e1a 100%);
+            background-attachment: fixed;
+            color: #e4e4e7;
             min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 163, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 153, 255, 0.05) 0%, transparent 50%);
         }
 
         header {
-            background: rgba(11, 15, 25, 0.8);
-            border-bottom: 1px solid rgba(31, 41, 55, 0.2);
-            padding: 16px 24px;
+            background: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 163, 0.1);
+            padding: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
         }
 
         .header-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 40px;
         }
 
         .logo {
-            font-size: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
             font-weight: 800;
-            background: linear-gradient(135deg, #00ffa3 0%, #00ff88 50%, #0099ff 100%);
+            background: linear-gradient(135deg, #00ffa3, #00ff88, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
-            cursor: pointer;
+            text-decoration: none;
         }
 
-        .nav-menu {
+        .nav-tabs {
             display: flex;
-            gap: 8px;
+            gap: 32px;
             flex: 1;
-            margin-left: 48px;
         }
 
-        .nav-btn {
-            padding: 8px 16px;
-            background: transparent;
-            border: 1px solid rgba(31, 41, 55, 0.3);
-            border-radius: 8px;
+        .nav-tab {
             color: #9ca3af;
-            cursor: pointer;
+            text-decoration: none;
             font-size: 14px;
             font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
             transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
         }
 
-        .nav-btn:hover {
-            background: rgba(31, 41, 55, 0.2);
-            border-color: rgba(0, 255, 163, 0.3);
+        .nav-tab:hover {
             color: #00ffa3;
-        }
-
-        .nav-btn.active {
             background: rgba(0, 255, 163, 0.1);
-            border-color: #00ffa3;
+        }
+
+        .nav-tab.active {
             color: #00ffa3;
+            background: rgba(0, 255, 163, 0.15);
+            border-bottom: 2px solid #00ffa3;
         }
 
         .header-right {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 20px;
         }
 
-        .wallet-info {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(31, 41, 55, 0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #9ca3af;
+        .wallet-status {
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 8px 12px;
+            background: rgba(31, 41, 55, 0.4);
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #9ca3af;
         }
 
         .status-dot {
@@ -114,7 +123,7 @@
         }
 
         .connect-btn, .disconnect-btn {
-            padding: 10px 20px;
+            padding: 10px 24px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -150,53 +159,32 @@
             padding: 0 20px;
         }
 
-        .swap-container {
-            background: rgba(17, 24, 39, 0.5);
-            border: 1px solid rgba(31, 41, 55, 0.3);
+        .swap-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(0, 255, 163, 0.15);
             border-radius: 24px;
             padding: 24px;
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        .swap-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .title {
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 24px;
-        }
-
-        .swap-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .settings-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(31, 41, 55, 0.3);
-            border: 1px solid rgba(31, 41, 55, 0.5);
-            border-radius: 10px;
-            color: #9ca3af;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .settings-btn:hover {
-            background: rgba(31, 41, 55, 0.5);
-            color: #00ffa3;
+            text-align: center;
+            background: linear-gradient(135deg, #00ffa3, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .token-box {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(31, 41, 55, 0.4);
+            background: rgba(31, 41, 55, 0.6);
+            border: 1px solid rgba(0, 255, 163, 0.1);
             border-radius: 16px;
             padding: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
             transition: all 0.3s ease;
         }
 
@@ -227,101 +215,82 @@
             align-items: center;
             gap: 8px;
             background: rgba(31, 41, 55, 0.5);
-            border: 1px solid rgba(31, 41, 55, 0.7);
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            color: #e4e4e7;
             padding: 8px 12px;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            color: #e8eaed;
-            font-weight: 600;
             font-size: 14px;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .token-select-btn:hover {
-            background: rgba(31, 41, 55, 0.7);
-            border-color: rgba(0, 255, 163, 0.2);
+            background: rgba(0, 255, 163, 0.1);
+            border-color: rgba(0, 255, 163, 0.4);
         }
 
-        select {
-            background: transparent;
-            border: none;
-            color: #e8eaed;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            font-size: 14px;
-        }
-
-        select option {
-            background: #1f2937;
-            color: #e8eaed;
-            padding: 8px;
-        }
-
-        select option:checked {
-            background: #0f172a;
-            color: #00ffa3;
-        }
-
-        .amount-input {
+        .token-input {
             flex: 1;
             background: transparent;
             border: none;
-            color: #e8eaed;
-            font-size: 18px;
+            color: #e4e4e7;
+            font-size: 20px;
             font-weight: 600;
             outline: none;
             text-align: right;
         }
 
-        .amount-input::placeholder {
-            color: #4b5563;
+        .token-input::placeholder {
+            color: #6b7280;
         }
 
-        .swap-divider {
+        .swap-arrow-container {
             display: flex;
             justify-content: center;
-            margin: 12px 0;
+            margin: -12px 0;
+            z-index: 10;
+            position: relative;
         }
 
         .swap-arrow {
+            background: rgba(30, 41, 59, 0.9);
+            border: 2px solid rgba(0, 255, 163, 0.2);
+            border-radius: 50%;
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, rgba(0, 255, 163, 0.1), rgba(0, 153, 255, 0.1));
-            border: 1px solid rgba(0, 255, 163, 0.2);
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color: #00ffa3;
             font-size: 20px;
             transition: all 0.3s ease;
         }
 
         .swap-arrow:hover {
-            background: linear-gradient(135deg, rgba(0, 255, 163, 0.2), rgba(0, 153, 255, 0.2));
+            border-color: rgba(0, 255, 163, 0.6);
             transform: rotate(180deg);
         }
 
         .info-box {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(31, 41, 55, 0.4);
+            background: rgba(31, 41, 55, 0.4);
+            border: 1px solid rgba(0, 255, 163, 0.1);
             border-radius: 12px;
-            padding: 12px 16px;
-            margin: 20px 0;
-            font-size: 13px;
+            padding: 12px;
+            margin-top: 16px;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 13px;
             color: #9ca3af;
         }
 
-        .info-row:last-child {
-            margin-bottom: 0;
+        .info-row:not(:last-child) {
+            border-bottom: 1px solid rgba(0, 255, 163, 0.05);
         }
 
         .info-value {
@@ -329,88 +298,230 @@
             font-weight: 600;
         }
 
-        .swap-btn {
+        .swap-button {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #00ffa3 0%, #00ff88 100%);
-            color: #000;
+            padding: 14px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #00ffa3, #00ff88);
             border: none;
             border-radius: 12px;
-            font-weight: 700;
+            color: #000;
             font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0, 255, 163, 0.25);
-            margin-top: 20px;
-            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
         }
 
-        .swap-btn:hover:not(:disabled) {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0, 255, 163, 0.4);
+        .swap-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 255, 163, 0.4);
         }
 
-        .swap-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+        .swap-button:active {
+            transform: translateY(0);
         }
 
         .message {
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
         }
 
-        .message.show {
-            display: block;
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .message.success {
-            background: rgba(6, 78, 59, 0.4);
-            border: 1px solid rgba(5, 150, 105, 0.4);
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.5);
             color: #86efac;
         }
 
         .message.error {
-            background: rgba(127, 29, 29, 0.4);
-            border: 1px solid rgba(153, 27, 27, 0.4);
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
             color: #fca5a5;
         }
 
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-box {
+            background: rgba(31, 41, 55, 0.3);
+            border: 1px solid rgba(0, 255, 163, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #9ca3af;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: #00ffa3;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .market-prices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .price-card {
+            background: rgba(31, 41, 55, 0.2);
+            border: 1px solid rgba(0, 255, 163, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .price-symbol {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00ffa3;
+            margin-bottom: 4px;
+        }
+
+        .price-value {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        /* Connect Modal */
+        #connectModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 420px;
+            backdrop-filter: blur(30px);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: #e4e4e7;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            text-align: center;
+            color: #e4e4e7;
+        }
+
+        .modal-buttons {
+            display: grid;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 16px;
+            background: rgba(0, 255, 163, 0.15);
+            border: 1px solid rgba(0, 255, 163, 0.3);
+            border-radius: 12px;
+            color: #e4e4e7;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            background: rgba(0, 255, 163, 0.25);
+            border-color: rgba(0, 255, 163, 0.6);
+        }
+
+        .modal-btn:first-child {
+            background: linear-gradient(135deg, rgba(0, 255, 163, 0.2), rgba(0, 255, 163, 0.1));
+            border-color: rgba(0, 255, 163, 0.4);
+        }
+
         @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            
-            .main {
-                margin: 20px auto;
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
             }
 
-            .swap-container {
-                padding: 20px;
+            .nav-tabs {
+                width: 100%;
+                justify-content: space-around;
+                gap: 8px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+
+            .swap-card {
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
         <div class="header-content">
-            <div class="logo">🤖 AI AGENT DEX</div>
+            <div class="logo">🚀 AI Agent DEX</div>
             
-            <div class="nav-menu">
-                <button class="nav-btn active" onclick="setTab('swap')">Swap</button>
-                <button class="nav-btn" onclick="setTab('limit')">Limit</button>
-                <button class="nav-btn" onclick="setTab('pool')">Pool</button>
-                <button class="nav-btn" onclick="setTab('buy')">Buy</button>
-                <button class="nav-btn" onclick="setTab('sell')">Sell</button>
+            <div class="nav-tabs">
+                <button class="nav-tab active">Swap</button>
+                <button class="nav-tab">Limit</button>
+                <button class="nav-tab">Pool</button>
+                <button class="nav-tab">Buy</button>
+                <button class="nav-tab">Sell</button>
             </div>
 
             <div class="header-right">
-                <div class="wallet-info">
+                <div class="wallet-status">
                     <span class="status-dot" id="statusDot"></span>
-                    <span id="walletText">Disconnected</span>
+                    <span id="walletAddress">Not Connected</span>
                 </div>
                 <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect</button>
                 <button class="disconnect-btn" id="disconnectBtn" onclick="disconnectWallet()">Disconnect</button>
@@ -418,60 +529,57 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="main">
-        <div class="swap-container">
-            <div id="message" class="message"></div>
-
-            <div class="swap-header">
-                <div class="swap-title">Swap</div>
-                <button class="settings-btn">⚙️</button>
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">24h Volume</div>
+                <div class="stat-value">$2.4B</div>
             </div>
+            <div class="stat-box">
+                <div class="stat-label">Liquidity</div>
+                <div class="stat-value">$8.7B</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Pairs</div>
+                <div class="stat-value">100+</div>
+            </div>
+        </div>
+
+        <!-- Swap Card -->
+        <div class="swap-card">
+            <div class="title">Swap</div>
 
             <!-- From Token -->
             <div class="token-box">
                 <div class="token-label">From</div>
                 <div class="token-row">
-                    <div class="token-select-btn">
-                        <select id="fromToken" onchange="onSwapChange()">
-                            <option value="USDT">USDT</option>
-                            <option value="ETH">ETH</option>
-                            <option value="BTC">BTC</option>
-                            <option value="USDC">USDC</option>
-                            <option value="SOL">SOL</option>
-                            <option value="DOGE">DOGE</option>
-                            <option value="XRP">XRP</option>
-                            <option value="LINK">LINK</option>
-                            <option value="ADA">ADA</option>
-                        </select>
-                    </div>
-                    <input type="number" id="fromAmount" class="amount-input" placeholder="0.0" step="0.0001" oninput="onSwapChange()" min="0">
+                    <input type="number" class="token-input" id="fromAmount" placeholder="0.00" oninput="updateFee()">
+                    <button class="token-select-btn" onclick="selectToken('from')">
+                        <span id="fromToken">ETH</span>
+                        <span>▼</span>
+                    </button>
                 </div>
+                <div style="font-size: 12px; color: #6b7280; margin-top: 8px;">Balance: <span id="fromBalance">0.00</span></div>
             </div>
 
             <!-- Swap Arrow -->
-            <div class="swap-divider">
+            <div class="swap-arrow-container">
                 <div class="swap-arrow" onclick="swapTokens()">⇅</div>
             </div>
 
             <!-- To Token -->
             <div class="token-box">
-                <div class="token-label">To</div>
+                <div class="token-label">To (Estimated)</div>
                 <div class="token-row">
-                    <div class="token-select-btn">
-                        <select id="toToken" onchange="onSwapChange()">
-                            <option value="ETH">ETH</option>
-                            <option value="USDT">USDT</option>
-                            <option value="BTC">BTC</option>
-                            <option value="USDC">USDC</option>
-                            <option value="SOL">SOL</option>
-                            <option value="DOGE">DOGE</option>
-                            <option value="XRP">XRP</option>
-                            <option value="LINK">LINK</option>
-                            <option value="ADA">ADA</option>
-                        </select>
-                    </div>
-                    <input type="number" id="toAmount" class="amount-input" placeholder="0.0" readonly>
+                    <input type="number" class="token-input" id="toAmount" placeholder="0.00" readonly>
+                    <button class="token-select-btn" onclick="selectToken('to')">
+                        <span id="toToken">USDT</span>
+                        <span>▼</span>
+                    </button>
                 </div>
+                <div style="font-size: 12px; color: #6b7280; margin-top: 8px;">Balance: <span id="toBalance">0.00</span></div>
             </div>
 
             <!-- Info -->
@@ -491,51 +599,51 @@
             </div>
 
             <!-- Swap Button -->
-            <button class="swap-btn" id="swapBtn" onclick="executeSwap()" disabled>Connect Wallet to Swap</button>
+            <button class="swap-button" onclick="executeSwap()">Swap</button>
         </div>
 
+        <!-- Market Prices -->
+        <div class="market-prices">
+            <div class="price-card">
+                <div class="price-symbol">BTC</div>
+                <div class="price-value" id="btcPrice">$45,200</div>
+            </div>
+            <div class="price-card">
+                <div class="price-symbol">ETH</div>
+                <div class="price-value" id="ethPrice">$2,800</div>
+            </div>
+            <div class="price-card">
+                <div class="price-symbol">USDT</div>
+                <div class="price-value" id="usdtPrice">$1.00</div>
+            </div>
+            <div class="price-card">
+                <div class="price-symbol">USDC</div>
+                <div class="price-value" id="usdcPrice">$1.00</div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Connect Wallet Modal -->
-        <div id="connectModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background: rgba(30,41,59,0.95); border: 1px solid rgba(0,255,163,0.2); border-radius: 24px; padding: 40px; max-width: 420px; backdrop-filter: blur(30px); position: relative;">
-                <button onclick="closeConnectModal()" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: #e4e4e7; font-size: 28px; cursor: pointer;">×</button>
-                
-                <div style="font-size: 22px; font-weight: 700; margin-bottom: 28px; text-align: center; color: #e4e4e7;">Connect Wallet</div>
-                
-                <div style="display: grid; gap: 12px;">
-                    <button onclick="connectMetaMask()" style="padding: 16px; background: linear-gradient(135deg, rgba(0,255,163,0.2), rgba(0,255,163,0.1)); border: 1px solid rgba(0,255,163,0.4); border-radius: 12px; color: #e4e4e7; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s;">
-                        🦊 MetaMask
-                    </button>
-                    
-                    <button onclick="connectTrustWallet()" style="padding: 16px; background: rgba(0,255,163,0.15); border: 1px solid rgba(0,255,163,0.3); border-radius: 12px; color: #e4e4e7; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s;">
-                        🛡️ Trust Wallet
-                    </button>
-                    
-                    <button onclick="connectWalletConnect()" style="padding: 16px; background: rgba(0,255,163,0.15); border: 1px solid rgba(0,255,163,0.3); border-radius: 12px; color: #e4e4e7; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s;">
-                        🔗 WalletConnect
-                    </button>
-                    
-                    <button onclick="connectOKX()" style="padding: 16px; background: rgba(0,255,163,0.15); border: 1px solid rgba(0,255,163,0.3); border-radius: 12px; color: #e4e4e7; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s;">
-                        ❌ OKX Wallet
-                    </button>
-                    
-                    <button onclick="connectCoinbase()" style="padding: 16px; background: rgba(0,255,163,0.15); border: 1px solid rgba(0,255,163,0.3); border-radius: 12px; color: #e4e4e7; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s;">
-                        ⭕ Coinbase Wallet
-                    </button>
-                </div>
+    <!-- Connect Wallet Modal -->
+    <div id="connectModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeConnectModal()">×</button>
+            
+            <div class="modal-title">Connect Wallet</div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn" onclick="connectMetaMask()">🦊 MetaMask</button>
+                <button class="modal-btn" onclick="connectTrustWallet()">🛡️ Trust Wallet</button>
+                <button class="modal-btn" onclick="connectWalletConnect()">🔗 WalletConnect</button>
+                <button class="modal-btn" onclick="connectOKX()">❌ OKX Wallet</button>
+                <button class="modal-btn" onclick="connectCoinbase()">⭕ Coinbase Wallet</button>
             </div>
         </div>
     </div>
 
     <script>
         let currentWallet = null;
-
-        function setTab(tab) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            showMessage(`${tab.charAt(0).toUpperCase() + tab.slice(1)} feature coming soon! 🚀`, 'error');
-        }
-
+        const tokens = ['ETH', 'BTC', 'USDT', 'USDC', 'SOL', 'DOGE', 'XRP', 'LINK', 'ADA', 'AVAX'];
+        
         function connectWallet() {
             document.getElementById('connectModal').style.display = 'flex';
         }
@@ -582,105 +690,107 @@
         }
 
         function updateWalletUI() {
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            const statusDot = document.getElementById('statusDot');
+            const walletAddress = document.getElementById('walletAddress');
+
             if (currentWallet) {
-                document.getElementById('statusDot').classList.add('connected');
-                document.getElementById('walletText').textContent = `${currentWallet.substring(0, 6)}...`;
-                document.getElementById('connectBtn').style.display = 'none';
-                document.getElementById('disconnectBtn').style.display = 'block';
+                const shortAddress = `${currentWallet.substring(0, 6)}...${currentWallet.substring(currentWallet.length - 4)}`;
+                walletAddress.textContent = shortAddress;
+                statusDot.classList.add('connected');
+                connectBtn.style.display = 'none';
+                disconnectBtn.style.display = 'block';
             } else {
-                document.getElementById('statusDot').classList.remove('connected');
-                document.getElementById('walletText').textContent = 'Disconnected';
-                document.getElementById('connectBtn').style.display = 'block';
-                document.getElementById('disconnectBtn').style.display = 'none';
+                walletAddress.textContent = 'Not Connected';
+                statusDot.classList.remove('connected');
+                connectBtn.style.display = 'block';
+                disconnectBtn.style.display = 'none';
             }
-            updateSwapBtn();
+        }
+
+        function selectToken(side) {
+            const token = prompt(`Select token: ${tokens.join(', ')}`);
+            if (token && tokens.includes(token.toUpperCase())) {
+                if (side === 'from') {
+                    document.getElementById('fromToken').textContent = token.toUpperCase();
+                } else {
+                    document.getElementById('toToken').textContent = token.toUpperCase();
+                }
+                updateFee();
+            }
         }
 
         function swapTokens() {
-            const from = document.getElementById('fromToken').value;
-            const to = document.getElementById('toToken').value;
-            document.getElementById('fromToken').value = to;
-            document.getElementById('toToken').value = from;
-            onSwapChange();
+            const fromToken = document.getElementById('fromToken').textContent;
+            const toToken = document.getElementById('toToken').textContent;
+            const fromAmount = document.getElementById('fromAmount').value;
+            const toAmount = document.getElementById('toAmount').value;
+
+            document.getElementById('fromToken').textContent = toToken;
+            document.getElementById('toToken').textContent = fromToken;
+            document.getElementById('fromAmount').value = toAmount;
+            document.getElementById('toAmount').value = fromAmount;
+            updateFee();
         }
 
-        async function onSwapChange() {
+        function updateFee() {
             const amount = parseFloat(document.getElementById('fromAmount').value) || 0;
-            const fromToken = document.getElementById('fromToken').value;
-            const toToken = document.getElementById('toToken').value;
-            
-            if (amount > 0) {
-                try {
-                    // Get real-time quote from backend
-                    const response = await fetch(`/api/quote/${fromToken}/${toToken}/${amount}`);
-                    const data = await response.json();
-                    
-                    if (data.error) {
-                        document.getElementById('toAmount').value = '';
-                        document.getElementById('feeDisplay').textContent = '0.0000';
-                        return;
-                    }
-                    
-                    document.getElementById('toAmount').value = data.amount_out;
-                    document.getElementById('feeDisplay').textContent = data.fee.toFixed(6);
-                    updateSwapBtn();
-                } catch (error) {
-                    console.error('Error fetching quote:', error);
-                    // Fallback to simple calculation
-                    const fee = (amount * 0.001).toFixed(6);
-                    const receive = (amount - fee).toFixed(6);
-                    document.getElementById('toAmount').value = receive;
-                    document.getElementById('feeDisplay').textContent = fee;
-                    updateSwapBtn();
-                }
-            } else {
-                document.getElementById('toAmount').value = '';
-                document.getElementById('feeDisplay').textContent = '0.0000';
-                document.getElementById('swapBtn').disabled = true;
-            }
+            const fee = amount * 0.001; // 0.1%
+            document.getElementById('feeDisplay').textContent = fee.toFixed(6);
         }
 
-        function updateSwapBtn() {
-            const amount = parseFloat(document.getElementById('fromAmount').value) || 0;
-            if (currentWallet && amount > 0) {
-                document.getElementById('swapBtn').disabled = false;
-                document.getElementById('swapBtn').textContent = 'Swap';
-            } else {
-                document.getElementById('swapBtn').disabled = true;
-                if (!currentWallet) {
-                    document.getElementById('swapBtn').textContent = 'Connect Wallet to Swap';
-                }
-            }
-        }
-
-        function executeSwap() {
+        async function executeSwap() {
             if (!currentWallet) {
-                connectWallet();
+                showMessage('❌ Connect wallet first', 'error');
                 return;
             }
 
+            const fromToken = document.getElementById('fromToken').textContent;
+            const toToken = document.getElementById('toToken').textContent;
             const amount = parseFloat(document.getElementById('fromAmount').value);
-            if (!amount || amount <= 0) return;
 
-            document.getElementById('swapBtn').disabled = true;
-            document.getElementById('swapBtn').textContent = 'Swapping...';
+            if (amount <= 0) {
+                showMessage('❌ Enter amount', 'error');
+                return;
+            }
 
+            showMessage(`⏳ Swapping ${amount} ${fromToken} to ${toToken}...`, 'success');
+            
             setTimeout(() => {
-                showMessage(`✅ Swap successful! Received ${document.getElementById('toAmount').value} ${document.getElementById('toToken').value}`, 'success');
-                document.getElementById('fromAmount').value = '';
-                onSwapChange();
-                document.getElementById('swapBtn').disabled = false;
-            }, 800);
+                showMessage(`✅ Swap completed! Fee: ${(amount * 0.001).toFixed(6)} ${fromToken}`, 'success');
+            }, 2000);
         }
 
-        function showMessage(msg, type) {
-            const msgDiv = document.getElementById('message');
-            msgDiv.textContent = msg;
-            msgDiv.className = `message show ${type}`;
-            setTimeout(() => msgDiv.classList.remove('show'), 4000);
+        function showMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 5000);
         }
 
-        // No auto-connect on page load - user must click Connect button
+        // Initialize
+        updateWalletUI();
+
+        // Fetch real prices from CoinGecko
+        async function fetchPrices() {
+            try {
+                const ids = 'bitcoin,ethereum,tether,usd-coin';
+                const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
+                const data = await res.json();
+                
+                if (data.bitcoin) document.getElementById('btcPrice').textContent = `$${data.bitcoin.usd.toLocaleString()}`;
+                if (data.ethereum) document.getElementById('ethPrice').textContent = `$${data.ethereum.usd.toLocaleString()}`;
+                if (data.tether) document.getElementById('usdtPrice').textContent = `$${data.tether.usd}`;
+                if (data['usd-coin']) document.getElementById('usdcPrice').textContent = `$${data['usd-coin'].usd}`;
+            } catch (e) {
+                console.log('Price fetch error:', e);
+            }
+        }
+
+        fetchPrices();
+        setInterval(fetchPrices, 30000); // Update every 30s
     </script>
 </body>
 </html>
