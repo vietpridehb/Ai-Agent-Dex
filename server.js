@@ -16,8 +16,20 @@ app.use(express.static('public', {
   maxAge: 0 // No cache
 }));
 
-// Default route to swap.html
+// Default routes - All point to swap.html
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'swap.html'));
+});
+
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'swap.html'));
+});
+
+app.get('/home.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'swap.html'));
+});
+
+app.get('/dex.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'swap.html'));
 });
 
