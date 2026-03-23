@@ -545,14 +545,35 @@
             onSwapChange();
         }
 
-        function onSwapChange() {
+        async function onSwapChange() {
             const amount = parseFloat(document.getElementById('fromAmount').value) || 0;
+            const fromToken = document.getElementById('fromToken').value;
+            const toToken = document.getElementById('toToken').value;
+            
             if (amount > 0) {
-                const fee = (amount * 0.001).toFixed(6);
-                const receive = (amount - fee).toFixed(6);
-                document.getElementById('toAmount').value = receive;
-                document.getElementById('feeDisplay').textContent = fee;
-                updateSwapBtn();
+                try {
+                    // Get real-time quote from backend
+                    const response = await fetch(`/api/quote/${fromToken}/${toToken}/${amount}`);
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        document.getElementById('toAmount').value = '';
+                        document.getElementById('feeDisplay').textContent = '0.0000';
+                        return;
+                    }
+                    
+                    document.getElementById('toAmount').value = data.amount_out;
+                    document.getElementById('feeDisplay').textContent = data.fee.toFixed(6);
+                    updateSwapBtn();
+                } catch (error) {
+                    console.error('Error fetching quote:', error);
+                    // Fallback to simple calculation
+                    const fee = (amount * 0.001).toFixed(6);
+                    const receive = (amount - fee).toFixed(6);
+                    document.getElementById('toAmount').value = receive;
+                    document.getElementById('feeDisplay').textContent = fee;
+                    updateSwapBtn();
+                }
             } else {
                 document.getElementById('toAmount').value = '';
                 document.getElementById('feeDisplay').textContent = '0.0000';

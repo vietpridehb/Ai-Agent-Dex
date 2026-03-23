@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -216,21 +217,103 @@ app.post('/api/swap', (req, res) => {
   });
 });
 
-// Price quote endpoint
-app.get('/api/quote/:from/:to/:amount', (req, res) => {
+// CoinGecko price mapping
+const coinGeckoMap = {
+  'BTC': 'bitcoin',
+  'ETH': 'ethereum',
+  'USDT': 'tether',
+  'USDC': 'usd-coin',
+  'SOL': 'solana',
+  'DOGE': 'dogecoin',
+  'XRP': 'ripple',
+  'LINK': 'chainlink',
+  'ADA': 'cardano',
+  'AVAX': 'avalanche-2'
+};
+
+// Get real-time price from CoinGecko
+function getPriceFromCoinGecko(coinId) {
+  return new Promise((resolve, reject) => {
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`;
+    
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          resolve(json[coinId]?.usd || null);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }).on('error', reject);
+  });
+}
+
+// Get price endpoint (real-time)
+app.get('/api/price/:token', async (req, res) => {
+  const token = req.params.token.toUpperCase();
+  const coinId = coinGeckoMap[token];
+  
+  if (!coinId) {
+    return res.status(400).json({ error: 'Token not supported' });
+  }
+  
+  try {
+    const price = await getPriceFromCoinGecko(coinId);
+    if (price === null) {
+      return res.status(404).json({ error: 'Price not found' });
+    }
+    res.json({
+      token,
+      price: price,
+      currency: 'USD',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch price' });
+  }
+});
+
+// Price quote endpoint (with real-time prices)
+app.get('/api/quote/:from/:to/:amount', async (req, res) => {
   const { from, to, amount } = req.params;
   const amt = parseFloat(amount);
   const fee = amt * 0.001;
   
-  res.json({
-    from_token: from,
-    to_token: to,
-    amount_in: amt,
-    fee: fee,
-    amount_out: amt - fee,
-    exchange_rate: `1 ${from} = 1 ${to}`,
-    timestamp: new Date().toISOString()
-  });
+  try {
+    const fromCoinId = coinGeckoMap[from.toUpperCase()];
+    const toCoinId = coinGeckoMap[to.toUpperCase()];
+    
+    if (!fromCoinId || !toCoinId) {
+      return res.status(400).json({ error: 'Token not supported' });
+    }
+    
+    const fromPrice = await getPriceFromCoinGecko(fromCoinId);
+    const toPrice = await getPriceFromCoinGecko(toCoinId);
+    
+    if (!fromPrice || !toPrice) {
+      return res.status(404).json({ error: 'Price not found' });
+    }
+    
+    const exchangeRate = fromPrice / toPrice;
+    const amount_out = (amt - fee) * exchangeRate;
+    
+    res.json({
+      from_token: from,
+      to_token: to,
+      amount_in: amt,
+      fee: fee,
+      amount_out: amount_out.toFixed(8),
+      exchange_rate: exchangeRate.toFixed(8),
+      from_price_usd: fromPrice,
+      to_price_usd: toPrice,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to calculate quote' });
+  }
 });
 
 app.listen(PORT, () => {
