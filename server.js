@@ -7,9 +7,14 @@ const https = require('https');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: false
+}));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public', {
+  maxAge: 0 // No cache
+}));
 
 // Default route to swap.html
 app.get('/', (req, res) => {
