@@ -1,0 +1,12 @@
+{
+  "agents": [],
+  "orders": [],
+  "transactions": [],
+  "fees": {
+    "BTC": 0.5,
+    "ETH": 0.5,
+    "USDT": 0.5,
+    "USDC": 0.5,
+    "DOGE": 0.5
+  }
+}
